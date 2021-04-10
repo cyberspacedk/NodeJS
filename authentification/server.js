@@ -31,6 +31,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
+// Middleware function for auth check status
 const authorize = (req, res, next) => {
     if(!req.session.user){
         next(new Error("Not logged in"))
@@ -65,7 +66,6 @@ app.get("/", (req, res)=> {
     res.set('Content-Type', "text/html");
     res.send(authFom);
 });
-
 
 app.post("/login", async (req, res, next)=> {
     try{
@@ -129,5 +129,11 @@ app.get("/private", authorize, (req, res)=> {
         <a href="/logout">Logout</a>
     `);
 });
+
+// Middleware that log errors   
+app.use((err, req, res, next)=>{
+    console.log(err);
+    res.send(err.message)
+})
 
 app.listen(3000);
